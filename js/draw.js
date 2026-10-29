@@ -176,7 +176,13 @@ function drawDark(g){const vw=Math.ceil(VW/2),vh=Math.ceil(VV/2);if(!lc){lc=docu
  for(const s of g.ps)L(s.x,s.y,160,0.9);for(const it of g.items)if(!it.gone)L(it.x,it.y,110,0.7);for(const e of g.en)if(!e.dead&&e.k==='crystalbat')L(e.x,e.y-20,120,0.6);if(g.boss)L(g.boss.x,g.boss.y-g.boss.h/2,320,0.8);if(g.cage)L(g.cage.x,g.cage.y-60,160,0.7);for(const c of g.cps)if(c.on)L(c.x,c.y-120,150,0.8);
  ctx.drawImage(lc,cam.x,cam.y,VW+2,VV+2)}
 function drawPops(g){ctx.textAlign='center';for(const o of g.pops){const a=Math.min(1,(1.4-o.t)*2);const x=o.x-cam.x,y=o.y-cam.y-o.t*50;ctx.globalAlpha=a;ctx.font=`900 ${o.big?22:17}px system-ui,sans-serif`;ctx.lineWidth=4;ctx.strokeStyle='rgba(40,0,50,0.8)';ctx.strokeText(o.txt,x,y);ctx.fillStyle=o.col;ctx.fillText(o.txt,x,y)}ctx.globalAlpha=1}
-function drawBossBar(g){const b=g.boss;if(!b||b.st==='gone')return;const w=Math.min(VW-40,420),x=(VW-w)/2,y=14;ctx.fillStyle='rgba(20,0,40,0.75)';rr(x-6,y-4,w+12,34,10);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 12px system-ui';ctx.textAlign='left';ctx.fillText(b.name,x+4,y+10);
+/* boss bar placement: centred in the free gap between the HUD pills and the pause/mute buttons when it fits, otherwise just below the HUD; never overlaps a pill */
+function bossBarBox(){let w=Math.min(VW-40,420),x=(VW-w)/2,y=14;const hud=document.getElementById('hud');if(!hud||hud.hidden)return{w,x,y};
+ const gs=hud.querySelectorAll('.grp'),bp=document.getElementById('bPause');let le=0,bot=0;gs.forEach(e=>{const r=e.getBoundingClientRect();le=Math.max(le,r.right);bot=Math.max(bot,r.bottom)});
+ let re=W;if(bp){const r=bp.getBoundingClientRect();re=r.left;bot=Math.max(bot,r.bottom)}let top=1e9;gs.forEach(e=>{top=Math.min(top,e.getBoundingClientRect().top)});
+ const gap=re-le-24;if(gap>=230){const wc=Math.min(w*S,gap);w=wc/S;x=(le+12+(gap-wc)/2)/S;y=Math.max(4,(top-gameTop)/S+4);return{w,x,y}}
+ y=Math.max(14,(bot+8-gameTop)/S+4);return{w,x,y}}
+function drawBossBar(g){const b=g.boss;if(!b||b.st==='gone')return;const{w,x,y}=bossBarBox();ctx.fillStyle='rgba(20,0,40,0.75)';rr(x-6,y-4,w+12,34,10);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 12px system-ui';ctx.textAlign='left';ctx.fillText(b.name,x+4,y+10);
  const f=b.hp/b.max;ctx.fillStyle='#3a1050';rr(x+4,y+15,w-8,10,5);ctx.fill();const gr=ctx.createLinearGradient(x,0,x+w,0);gr.addColorStop(0,'#ff5fa2');gr.addColorStop(1,'#ffd84a');ctx.fillStyle=gr;rr(x+4,y+15,(w-8)*f,10,5);ctx.fill()}
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function drawBanner(g){const b=g.banner;if(!b)return;b.t+=1/60;if(b.t>2.6){g.banner=null;return}const a=Math.min(1,b.t*4,(2.6-b.t)*3);const s=1+Math.max(0,0.4-b.t)*1.5;ctx.save();ctx.globalAlpha=a;ctx.translate(VW/2,VV*0.36);ctx.scale(s,s);ctx.textAlign='center';
