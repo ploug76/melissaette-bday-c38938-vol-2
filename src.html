@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1b0a33">
+<meta name="robots" content="noindex,nofollow">
+<title>Melissa Time: The Great Birthday Rescue, Volume 2</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+[hidden]{display:none!important}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#120a26;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;overscroll-behavior:none}
+canvas{position:fixed;inset:0;display:block}
+#hud{position:fixed;left:0;right:0;top:6px;display:flex;align-items:center;gap:10px;padding:0 10px;z-index:5;pointer-events:none}
+#hud .grp{white-space:nowrap;display:flex;align-items:center;gap:8px;background:rgba(30,6,50,.62);border:2px solid rgba(255,140,210,.55);border-radius:16px;padding:5px 11px;font-weight:800;font-size:16px;text-shadow:0 2px 0 #3a0a50}
+#hHearts i{font-style:normal;color:#5a3a6a;font-size:18px}#hHearts i.on{color:#ff4f86;text-shadow:0 0 8px #ff6fae}
+#hud .sp{flex:1}
+.hb{pointer-events:auto;width:46px;height:46px;border-radius:14px;border:2px solid rgba(255,255,255,.65);background:rgba(40,10,70,.7);color:#fff;font-size:20px;font-weight:900}
+body.landscape #hud .grp{font-size:14px;padding:4px 9px}
+#pad{position:fixed;left:0;right:0;z-index:4;pointer-events:none}
+body.portrait #pad{background:radial-gradient(ellipse at 50% 0%,rgba(255,110,190,.18),transparent 70%),linear-gradient(#1d0b38,#0d0620)}
+#swipeHint{position:absolute;left:0;right:0;top:12px;text-align:center;font-size:13px;font-weight:800;letter-spacing:.08em;color:rgba(255,220,245,.75)}
+body.landscape #swipeHint{display:none}
+.big2{position:absolute;pointer-events:auto;border-radius:50%;border:3px solid rgba(255,255,255,.85);color:#fff;font-weight:900;font-size:17px;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 -6px 0 rgba(0,0,0,.18);touch-action:none}
+#bJump{background:radial-gradient(circle at 35% 30%,#7fe6ff,#1f8fd8 70%)}
+#bAct{background:radial-gradient(circle at 35% 30%,#ffb0e0,#d83f9a 70%)}#bAct span{font-size:12px}
+.big2.on{transform:scale(.92);filter:brightness(1.25)}
+body.landscape .big2{opacity:.82}
+#ui{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 12px}
+#ui.ui-on{display:flex}
+#ui button{font:inherit;font-weight:900;color:#fff;border:3px solid #fff;border-radius:18px;background:linear-gradient(#7a3ad8,#4a1a98);padding:12px 20px;min-height:52px;font-size:17px;box-shadow:0 5px 0 #2a0a58,0 8px 20px rgba(0,0,0,.4);cursor:pointer;outline:none}
+#ui button.primary{background:linear-gradient(#ff6fb8,#d8307f);box-shadow:0 5px 0 #7a1048,0 8px 20px rgba(0,0,0,.4)}
+#ui button.big{font-size:22px;padding:14px 34px}
+#ui button:focus-visible,#ui button:focus{box-shadow:0 0 0 4px #ffd84a,0 5px 0 #2a0a58;transform:scale(1.04)}
+#ui button:disabled{opacity:.55}
+.menu{display:flex;flex-direction:column;gap:12px;align-items:stretch;margin:14px auto 0;max-width:340px}
+.row{display:flex;gap:12px;justify-content:center;margin-top:12px}
+.title{text-align:center;width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:space-between;padding:4vh 0 3vh}
+.logo{animation:float 4s ease-in-out infinite}
+.logo .l1{font-size:clamp(44px,10vw,92px);font-weight:1000;line-height:.95;letter-spacing:.02em;background:linear-gradient(#fff6c0,#ffd84a 40%,#ff7ab8 75%,#c84aff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #4a0a60) drop-shadow(0 0 18px rgba(255,120,200,.7));font-style:italic}
+.logo .l2{font-size:clamp(18px,4.4vw,34px);font-weight:900;margin-top:6px;text-shadow:0 3px 0 #4a0a60,0 0 14px #ff7ab8}
+.logo .vol{display:inline-block;margin-top:10px;padding:5px 18px;border-radius:30px;font-weight:1000;letter-spacing:.3em;font-size:clamp(14px,3vw,20px);background:linear-gradient(90deg,#ff5fa2,#ffd84a,#5fd3ff,#c77dff);color:#2a0a40;box-shadow:0 0 22px rgba(255,220,120,.8);animation:pulse 1.6s ease-in-out infinite}
+.hb54{font-weight:900;font-size:clamp(16px,3.6vw,22px);text-shadow:0 2px 0 #4a0a60,0 0 10px #000;margin-top:8px}
+.tc{font-weight:800;text-shadow:0 2px 4px #000;margin-top:10px}
+body.landscape .title{padding:1vh 0}body.landscape .logo .l1{font-size:clamp(34px,8vh,64px)}body.landscape .logo .l2{font-size:20px}body.landscape .logo .vol{margin-top:4px;font-size:13px}body.landscape .hb54{font-size:15px;margin-top:4px}body.landscape .title .menu{flex-direction:row;max-width:none;flex-wrap:wrap;justify-content:center}body.landscape .title .menu button{font-size:16px;padding:10px 16px;min-height:44px}body.landscape .tc{margin-top:4px;font-size:14px}
+@keyframes float{50%{transform:translateY(-8px)}}@keyframes pulse{50%{filter:brightness(1.3);transform:scale(1.05)}}
+.cine{position:absolute;left:0;right:0;bottom:0;padding:16px;background:linear-gradient(transparent,rgba(12,0,30,.9) 40%)}
+.cap{max-width:760px;margin:0 auto}.cap p{font-size:clamp(18px,3.6vw,24px);font-weight:800;line-height:1.35;text-shadow:0 2px 6px #000;min-height:3.2em;margin:6px 0}.pg{font-size:13px;opacity:.75;font-weight:900;letter-spacing:.2em}
+.card,.pause,.clear,.how,.sel{background:rgba(25,6,48,.86);border:3px solid rgba(255,140,210,.75);border-radius:24px;padding:20px;max-width:640px;width:100%;text-align:center;box-shadow:0 0 40px rgba(255,100,200,.35);max-height:100%;overflow:auto}
+.card{background:rgba(25,6,48,.78)}.card .sub{letter-spacing:.3em;font-weight:900;color:#ffd84a}.card h1{font-size:clamp(28px,6vw,44px);margin:6px 0 8px;background:linear-gradient(#fff,#ff9ad5);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #4a0a60)}
+.card p{font-size:17px;font-weight:600;line-height:1.4}.cc{margin:10px 0 16px;font-weight:800;color:#ffe9a0}
+h2{margin:4px 0 10px;font-size:28px;color:#ffd84a;text-shadow:0 3px 0 #4a0a60}
+.stats{display:grid;gap:6px;font-size:17px;margin:8px 0}.stats b{color:#ffe27a}.gold{color:#ffd84a;text-shadow:0 0 10px #ffd84a}
+.how{max-width:960px;text-align:left}.how h2{text-align:center}.how .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.how h3{margin:6px 0;color:#ff9ad5;font-size:17px}.how ul{margin:0;padding-left:18px;font-size:15px;line-height:1.45}
+.sel{max-width:900px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+#ui button.land{padding:0;overflow:hidden;display:flex;flex-direction:column;text-align:left;border-radius:16px;min-height:0;background:#2a0a50}
+.land img{width:100%;aspect-ratio:16/8;object-fit:cover;display:block}.land b{padding:8px 10px 0;font-size:15px}.land span{padding:2px 10px 10px;font-size:13px;color:#ffe9a0;font-weight:700}
+.tip{font-size:14px;opacity:.85;margin-top:10px}
+.end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px}
+.lyr{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:2vh;text-align:center}
+.lyr span{font-size:clamp(18px,4vw,30px);font-weight:900;opacity:.35;text-shadow:0 3px 8px #000;transition:all .3s}.lyr span.on{opacity:1;color:#ffe27a;transform:scale(1.12);text-shadow:0 0 16px #ff7ab8,0 3px 0 #4a0a60}.lyr span.done{opacity:.7}
+.endbox{background:rgba(25,6,48,.84);border:3px solid #ffd84a;border-radius:24px;padding:16px 20px;max-width:620px;text-align:center;box-shadow:0 0 40px rgba(255,220,120,.5);animation:pop .6s}
+.endbox h1{margin:0 0 6px;font-size:clamp(24px,5vw,38px);background:linear-gradient(#fff6c0,#ffd84a,#ff7ab8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.endbox .menu{flex-direction:row;justify-content:center;max-width:none}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-80px);z-index:30;background:rgba(30,6,50,.92);border:2px solid #5fd3ff;border-radius:16px;padding:10px 18px;font-weight:900;transition:transform .35s;pointer-events:none}
+#toast.show{transform:translate(-50%,0)}
+#loading{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(#3a1060,#120a26);gap:16px;font-weight:900}
+#loading .bar{width:min(320px,70vw);height:14px;border-radius:8px;background:#2a0a50;overflow:hidden;border:2px solid #ff9ad5}#ldBar{height:100%;width:0;background:linear-gradient(90deg,#ff5fa2,#ffd84a)}
+</style>
+</head><body>
+<canvas id="cv" aria-label="Melissa Time Volume 2 game"></canvas>
+<div id="hud" hidden><div class="grp"><span id="hHearts"></span></div><div class="grp">🕯 <span id="hCandles">0/9</span></div><div class="grp">⭐ <span id="hScore">0</span></div><div class="sp"></div><button id="bPause" class="hb" type="button" aria-label="Pause">II</button><button id="bMute" class="hb" type="button" aria-label="Mute">🔊</button></div>
+<div id="pad" hidden><div id="swipeHint">SWIPE &amp; HOLD TO MOVE · SWIPE UP TO JUMP</div><button id="bAct" class="big2" type="button" aria-label="Sparkle">✨<span>SPARKLE</span></button><button id="bJump" class="big2" type="button" aria-label="Jump">JUMP</button></div>
+<div id="ui"></div>
+<div id="toast"></div>
+<div id="loading"><div>🎂 Loading Melissa Time, Volume 2…</div><div class="bar"><div id="ldBar"></div></div></div>
+<script>window.MTV='1'</script>
+<script src="js/audio.js?v=1"></script>
+<script src="js/levels.js?v=1"></script>
+<script src="js/core.js?v=1"></script>
+<script src="js/world.js?v=1"></script>
+<script src="js/boss.js?v=1"></script>
+<script src="js/draw.js?v=1"></script>
+<script src="js/ui.js?v=1"></script>
+<script>if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{})</script>
+</body></html>
