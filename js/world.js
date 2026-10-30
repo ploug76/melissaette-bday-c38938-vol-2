@@ -54,7 +54,7 @@ function updPlats(g,dt){for(const q of g.plats){const ox=q.x,oy=q.y;
 function hurt(g,p,src){if(p.inv>0||p.star>0||G.god)return;p.hp--;p.inv=1.4;p.hurtT=0.45;p.vy=-520;p.vx=(src&&src.x>p.x?-1:1)*320;AU.fx('hurt');shake(g,10);g.flash=0.25;
  burst(g,p.x,p.y-60,14,['#ffd84a','#fff','#ff5fa2'],300,'star',8);if(p.hp<=0)oops(g)}
 function oops(g){const p=g.p;p.dead=1.4;AU.fx('fall');g.score=Math.max(0,g.score-500);pop(g,p.x,p.y-120,'Oops! Try again!','#ffd84a',1)}
-function respawn(g){const p=g.p;const cp=g.bossOn?{x:g.arena.x0+80,y:GY}:{x:g.cpX,y:g.cpY};Object.assign(p,newPlayer(cp.x,cp.y));p.hp=p.max=g.maxHp||3;p.inv=1.5;
+function respawn(g){const p=g.p;const cp=g.bossOn?{x:g.arena.x0+80,y:GY}:{x:g.cpX,y:g.cpY};Object.assign(p,newPlayer(cp.x,cp.y));if(!g.bossOn){const sg=g.sol.find(s=>cp.x>=s.x&&cp.x<=s.x+s.w&&Math.abs(s.y-cp.y)<2);if(sg&&sg.w>=160)p.x=Math.max(sg.x+80,Math.min(sg.x+sg.w-80,cp.x))}p.hp=p.max=g.maxHp||3;p.inv=1.5;
  for(const pl of g.pals){pl.x=cp.x-40;pl.y=cp.y}g.hist=[];burst(g,p.x,p.y-50,24,CONF,300,'star',8)}
 function updPlayer(g,dt){const p=g.p,L=g.L;
  if(p.dead>0){p.dead-=dt;p.vy+=GRAV*0.4*dt;p.y+=p.vy*dt*0.2;if(p.dead<=0)respawn(g);return}
@@ -94,7 +94,7 @@ function updPlayer(g,dt){const p=g.p,L=g.L;
  for(const sp of g.springs){if(p.vy>=0&&Math.abs(p.x-sp.x)<34&&p.y>=sp.y-40&&prevY<=sp.y-30){p.y=sp.y-40;p.vy=-PH.spring;p.on=false;p.springT=0.5;p.jumps=1;p.pound=0;sp.sq=1;AU.fx('spring');confetti(g,sp.x,sp.y-40,16);p.sy=1.35;p.sx=0.75}}
  // water / pit
  if(p.y>GY+260){if(L.water){for(let i=0;i<20;i++)part(g,{x:p.x+rnd(-20,20),y:GY+20,vx:rnd(-160,160),vy:rnd(-520,-180),life:0.8,size:rnd(4,8),col:'rgba(190,240,255,0.9)',k:'dot',grav:1200})}
-  if(G.god){p.x=nextGround(g,p.x);p.y=topAt(g,p.x)-1;p.vy=0}else{p.hp--;AU.fx('fall');shake(g,8);if(p.hp<=0){oops(g);p.y=GY+260;return}p.x=p.safeX;p.y=p.safeY;p.vx=p.vy=0;p.inv=1.4}}
+  if(G.god){p.x=nextGround(g,p.x);p.y=topAt(g,p.x)-1;p.vy=0}else if(p.inv>0||p.star>0){p.x=rfBack(g,p.safeX,p.safeY,p.x);p.y=p.safeY;p.vx=p.vy=0;p.inv=Math.max(p.inv,1)}else{p.hp--;AU.fx('fall');shake(g,8);if(p.hp<=0){oops(g);p.y=GY+260;return}p.x=rfBack(g,p.safeX,p.safeY,p.x);p.y=p.safeY;p.vx=p.vy=0;p.inv=1.4}}
  // spikes
  for(const s of g.spikes){if(ov(pbox(p),{x:s.x+6,y:s.y-26,w:s.w-12,h:26}))hurt(g,p,{x:s.x+s.w/2})}
  // timers & anim
@@ -106,6 +106,8 @@ function updPlayer(g,dt){const p=g.p,L=g.L;
  if(p.on&&Math.abs(p.vx)>200&&Math.random()<0.25)part(g,{x:p.x-p.face*10,y:p.y-2,vx:-p.face*rnd(20,80),vy:rnd(-60,-20),life:0.35,size:rnd(3,6),col:L.theme==='peaks'?'rgba(255,255,255,0.9)':'rgba(230,210,180,0.6)',k:'smoke'});
  // trail history for followers
  g.hist.unshift({x:p.x,y:p.y,f:p.face,on:p.on});if(g.hist.length>200)g.hist.pop()}
+/* respawn fix (Oct 30): blinking pit falls are free; respawn backs up ~1.5 body widths from the pit edge */
+function rfBack(g,x,y,fx){const s=g.sol.find(s=>x>=s.x&&x<=s.x+s.w&&Math.abs(s.y-y)<2);if(!s)return x;const d=Math.sign(fx-x)||1,m=80,edge=d>0?s.x+s.w:s.x;let nx=x;if(Math.abs(edge-x)<m)nx=edge-d*m;nx=Math.max(s.x+Math.min(m,s.w/2),Math.min(s.x+s.w-Math.min(m,s.w/2),nx));for(const k of g.spikes||[])if(nx+40>k.x&&nx-40<k.x+k.w)return x;return nx}
 function nextGround(g,x){let best=null;for(const s of g.sol){if(s.x+s.w>x+60){const nx=Math.max(s.x+50,x+60);if(!best||nx<best)best=nx}}return best||x}
 function landOn(g,p,s,wasOn){p.vy=0;p.on=true;if(!wasOn){p.sx=1.2;p.sy=0.82;AU.fx('land');for(let i=0;i<6;i++)part(g,{x:p.x+rnd(-18,18),y:p.y,vx:rnd(-120,120),vy:rnd(-50,-10),life:0.4,size:rnd(4,8),col:'rgba(255,255,255,0.6)',k:'smoke'})}
  if(p.pound){p.pound=0;shake(g,9);AU.fx('pound');for(let i=0;i<18;i++){const a=Math.PI+i/17*Math.PI;part(g,{x:p.x,y:p.y-4,vx:Math.cos(a)*340,vy:Math.sin(a)*160,life:0.5,size:rnd(5,9),col:'rgba(255,240,220,0.8)',k:'smoke'})}
