@@ -21,9 +21,9 @@ function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,2)
  VW=W/S;document.body.classList.toggle('portrait',portrait);document.body.classList.toggle('landscape',!portrait);layoutPad()}
 function layoutPad(){const pad=$('pad'),bj=$('bJump'),ba=$('bAct'),hud=$('hud');
  if(portrait){const top=gameTop+gameH,ph=H-top;pad.style.top=top+'px';pad.style.height=ph+'px';const sz=Math.round(clamp(ph*0.38,84,124));
-  [bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});bj.style.right='18px';bj.style.bottom=Math.round(clamp(ph*0.2,18,80))+'px';ba.style.right=(18+sz+18)+'px';ba.style.bottom=Math.round(clamp(ph*0.2,18,80)+sz*0.42)+'px';
+  [bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});/* Oct 30: JUMP bottom-right, SPARKLE bottom-left */ba.style.right='';bj.style.left='';bj.style.right='18px';bj.style.bottom=Math.round(clamp(ph*0.2,18,80))+'px';ba.style.left='18px';ba.style.bottom=Math.round(clamp(ph*0.2,18,80))+'px';
   hud.style.top=Math.max(4,gameTop-52)+'px'}
- else{pad.style.top='0';pad.style.height='100%';const sz=Math.round(clamp(H*0.2,68,94));[bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});bj.style.right='12px';bj.style.bottom='14px';ba.style.right=(12+Math.round(sz*0.15))+'px';ba.style.bottom=(14+sz+12)+'px';hud.style.top='6px'}}
+ else{pad.style.top='0';pad.style.height='100%';const sz=Math.round(clamp(H*0.2,68,94));[bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});ba.style.right='';bj.style.left='';bj.style.right='12px';bj.style.bottom='14px';ba.style.left='12px';ba.style.bottom='14px';hud.style.top='6px'}}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,120));
 /* ---------- input: swipe & hold to move, swipe up to jump (hold = higher), swipe down = drop / ground-pound. NO D-pad. ---------- */
 const K={},VIRT={jump:0,act:0},TOUCH=new Map();
