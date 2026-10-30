@@ -29,3 +29,9 @@ The game isn't indexed: robots.txt has `Disallow: /` and the page has a noindex 
 `./build.sh` turns `src.html` into `index.html`. It adds private OG tags, the share dock and the shared leaderboard,
 and bumps the service worker cache.
 Art is rebuilt from generated sources with `tools/build_art.py`. Cover images come from `tools/cover.py`.
+
+## Leg rig (Oct 2026)
+Melissa's run used to flip between two near-identical frames (run1/run2), so her legs looked like they vibrated.
+She now runs with a real alternating stride: `tools/mkparts.py` cuts the painted legs off `run1`/`cast` (→ `art/hero/run_t`,
+`cast_t`) and `js/draw.js` draws animated legs (phase follows her speed, knee bend, heel kick, bob, lean, eases to standing).
+Rerun `tools/mkparts.py` after `tools/build_art.py`. Grumblins, snappers and walking bosses get a speed-matched stepping waddle.
