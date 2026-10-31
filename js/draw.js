@@ -106,11 +106,29 @@ function drawThings(g){const t=g.t;
 function drawEnemies(g){for(const e of g.en){if(e.x<cam.x-120||e.x>cam.x+VW+120)continue;const d=EN[e.k];
  if(e.dead){const a=1-e.dt/0.5;if(a<=0)continue;ctx.save();ctx.globalAlpha=a;ctx.translate(e.x,e.y-e.h/2);ctx.scale(1+e.dt*2,1-e.dt*1.5);drawSprite('enemy/'+e.k,0,e.h/2,d.sc,e.face>0);ctx.restore();continue}
  if(!e.fly){ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(e.x,e.y,e.w*0.45,6,0,0,TAU);ctx.fill()}
+ if(e.k==='grumblin'&&drawGrumSide(e,g,d))continue;
  const wd=e.k==='grumblin'||e.k==='snapper'?waddle(e,g,e.k==='snapper'?70:95,e.k==='snapper'?0.05:0.1,e.k==='snapper'?5:7):null;ctx.save();ctx.translate(e.x,e.y);if(wd){ctx.translate(0,-wd.bob);ctx.rotate(wd.rot);ctx.scale(1/wd.sq,wd.sq)}if(e.hit>0)ctx.filter='brightness(2.2)';
  if(e.k==='buzzgrump'||e.k==='crystalbat'){const fl=Math.sin(e.t*30)*0.06;ctx.scale(1,1+fl)}
  drawSprite('enemy/'+e.k,0,e.k==='raincloud'?20:4,d.sc,e.face>0,0.5,e.k==='snowgrump'?e.rot||0:0);ctx.filter='none';ctx.restore();
  if(e.k==='crystalbat'&&g.L.dark){ctx.globalCompositeOperation='lighter';glow(e.x,e.y-20,50,'rgba(150,120,255,0.35)');ctx.globalCompositeOperation='source-over'}}}
 function bossFace(b){return b.k==='humbug'||b.k==='buzzbelle'?b.face>0:b.face>0}
+/* grumblin side view (Oct 30 2026): profile body + jointed legs while walking; flips with direction */
+function grLimb(x,y,a,len,w,f,l){const ex=x+Math.sin(a)*len,ey=y+Math.cos(a)*len;ctx.lineCap='round';ctx.strokeStyle=l;ctx.lineWidth=w+3.4;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.strokeStyle=f;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();return[ex,ey]}
+function grLeg(hx,hy,t,amp,back){const s=Math.sin(t),cs=Math.cos(t);
+ const th=amp*0.7*s,kn=0.08+amp*(1.25*Math.pow(Math.max(0,cs),1.3)+0.1*Math.max(0,-cs));
+ const F=back?'#5c3c7a':'#7a5296',L='#1d0b35';
+ const k=grLimb(hx,hy,th,13,back?14:16,F,L);ctx.fillStyle=F;ctx.beginPath();ctx.arc(k[0],k[1],back?7:8,0,TAU);ctx.fill();
+ const sa=th-kn,a=grLimb(k[0],k[1],sa,11,back?12:14,F,L);
+ ctx.save();ctx.translate(a[0],a[1]);ctx.rotate(-sa*0.6-amp*0.25*Math.max(0,cs));ctx.fillStyle=L;ctx.beginPath();ctx.ellipse(5,1,12.5,6.5,0,0,TAU);ctx.fill();ctx.fillStyle=F;ctx.beginPath();ctx.ellipse(5,0,10.6,4.9,0,0,TAU);ctx.fill();ctx.restore()}
+function drawGrumSide(e,g,d){const im=IMG['enemy/grumblin_side'];if(!im)return false;
+ const dt=Math.min(0.05,Math.max(0,g.t-(e._gt===undefined?g.t:e._gt)));e._gt=g.t;const v=dt>0?Math.abs(e.x-(e._gx===undefined?e.x:e._gx))/dt:0;e._gx=e.x;
+ if(e._gp===undefined){e._gp=0;e._ga=0}const mv=v>15&&!e.air;e._ga+=((mv?1:0)-e._ga)*Math.min(1,dt*10);if(mv)e._gp=(e._gp+v*dt/62)%1;
+ if(e._ga<0.25)return false;
+ const amp=Math.min(1,e._ga),t=e._gp*TAU,bob=amp*3*Math.cos(2*t);
+ ctx.save();ctx.translate(e.x,e.y+4);if(e.hit>0)ctx.filter='brightness(2.2)';ctx.scale((e.face<0?-1:1)*d.sc,d.sc);const hy=-25+bob;
+ grLeg(-7,hy,t+Math.PI,amp,true);
+ ctx.save();ctx.translate(0,hy);ctx.rotate(0.03*amp*Math.sin(2*t));ctx.drawImage(im,-40.5,-121,82,129);ctx.restore();
+ grLeg(5,hy+1,t,amp,false);ctx.filter='none';ctx.restore();return true}
 /* stepping gait for single-painting walkers: phase follows real ground speed, rock side to side + step bob + squash on each footfall, settles when stopped */
 function waddle(o,g,stride,rk,bh){const dt=Math.min(0.05,Math.max(0,g.t-(o._wt===undefined?g.t:o._wt)));o._wt=g.t;const v=dt>0?Math.abs(o.x-(o._wx===undefined?o.x:o._wx))/dt:0;o._wx=o.x;
  if(o._wp===undefined){o._wp=0;o._wa=0}const mv=v>20&&!o.air;o._wa+=((mv?1:0)-o._wa)*Math.min(1,dt*10);if(mv)o._wp=(o._wp+v*dt/stride)%1;
