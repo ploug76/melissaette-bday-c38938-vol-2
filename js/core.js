@@ -20,10 +20,16 @@ function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,2)
  else{VV=clamp(Math.round(540*Math.min(1,(W/H)/2.6)),440,540);S=H/VV;gameH=H;gameTop=0}
  VW=W/S;document.body.classList.toggle('portrait',portrait);document.body.classList.toggle('landscape',!portrait);layoutPad()}
 function layoutPad(){const pad=$('pad'),bj=$('bJump'),ba=$('bAct'),hud=$('hud');
- if(portrait){const top=gameTop+gameH,ph=H-top;pad.style.top=top+'px';pad.style.height=ph+'px';const sz=Math.round(clamp(ph*0.38,84,124));
-  [bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});/* Oct 30: JUMP bottom-right, SPARKLE bottom-left */ba.style.right='';bj.style.left='';bj.style.right='18px';bj.style.bottom=Math.round(clamp(ph*0.2,18,80))+'px';ba.style.left='18px';ba.style.bottom=Math.round(clamp(ph*0.2,18,80))+'px';
+ /* Peter Oct 30 9:40 PM: cluster like his screenshot - JUMP big orange far bottom-right, SPARKLE smaller green up-left of it */
+ ba.style.left='';bj.style.left='';
+ if(portrait){const top=gameTop+gameH,ph=H-top;pad.style.top=top+'px';pad.style.height=ph+'px';
+  const big=Math.round(clamp(ph*0.36,92,124)),sm=Math.round(big*0.84),bot=Math.round(clamp(ph*0.14,18,46));
+  bj.style.width=bj.style.height=big+'px';ba.style.width=ba.style.height=sm+'px';
+  bj.style.right='16px';bj.style.bottom=bot+'px';ba.style.right=(16+big+14)+'px';let ab=bot+big*0.42;if(ab+sm>ph-8)ab=ph-sm-8;ba.style.bottom=Math.round(ab)+'px';
   hud.style.top=Math.max(4,gameTop-52)+'px'}
- else{pad.style.top='0';pad.style.height='100%';const sz=Math.round(clamp(H*0.2,68,94));[bj,ba].forEach(b=>{b.style.width=b.style.height=sz+'px'});ba.style.right='';bj.style.left='';bj.style.right='12px';bj.style.bottom='14px';ba.style.left='12px';ba.style.bottom='14px';hud.style.top='6px'}}
+ else{pad.style.top='0';pad.style.height='100%';const big=Math.round(clamp(H*0.21,72,96)),sm=Math.round(big*0.82);
+  bj.style.width=bj.style.height=big+'px';ba.style.width=ba.style.height=sm+'px';
+  bj.style.right='14px';bj.style.bottom='12px';ba.style.right=(14+big+10)+'px';ba.style.bottom=Math.round(12+big*0.18)+'px';hud.style.top='6px'}}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,120));
 /* ---------- input: swipe & hold to move, swipe up to jump (hold = higher), swipe down = drop / ground-pound. NO D-pad. ---------- */
 const K={},VIRT={jump:0,act:0},TOUCH=new Map();

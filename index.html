@@ -23,9 +23,9 @@ body.landscape #hud .grp{font-size:14px;padding:4px 9px}
 body.portrait #pad{background:radial-gradient(ellipse at 50% 0%,rgba(255,110,190,.18),transparent 70%),linear-gradient(#1d0b38,#0d0620)}
 #swipeHint{position:absolute;left:0;right:0;top:12px;text-align:center;font-size:13px;font-weight:800;letter-spacing:.08em;color:rgba(255,220,245,.75)}
 body.landscape #swipeHint{display:none}
-.big2{position:absolute;pointer-events:auto;border-radius:50%;border:3px solid rgba(255,255,255,.85);color:#fff;font-weight:900;font-size:17px;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 -6px 0 rgba(0,0,0,.18);touch-action:none}
-#bJump{background:radial-gradient(circle at 35% 30%,#7fe6ff,#1f8fd8 70%)}
-#bAct{background:radial-gradient(circle at 35% 30%,#ffb0e0,#d83f9a 70%)}#bAct span{font-size:12px}
+.big2{position:absolute;pointer-events:auto;border-radius:50%;border:3px solid #fff;color:#fff;font-weight:900;font-size:17px;text-shadow:-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000,0 2px 0 #000,0 -2px 0 #000,2px 0 0 #000,-2px 0 0 #000;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 -6px 0 rgba(0,0,0,.18);touch-action:none}
+#bJump{background:radial-gradient(circle at 35% 30%,#ffe0b0,#ff8a1a 55%,#a03a00);font-size:24px}
+#bAct{background:radial-gradient(circle at 35% 30%,#d8ffd0,#38b040 55%,#0a5a12)}#bAct span{font-size:12px}
 .big2.on{transform:scale(.92);filter:brightness(1.25)}
 body.landscape .big2{opacity:.82}
 #ui{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px 12px}
@@ -80,7 +80,7 @@ h2{margin:4px 0 10px;font-size:28px;color:#ffd84a;text-shadow:0 3px 0 #4a0a60}
 <script>window.MTV='8'</script>
 <script src="js/audio.js?v=5"></script>
 <script src="js/levels.js?v=5"></script>
-<script src="js/core.js?v=6"></script>
+<script src="js/core.js?v=7"></script>
 <script src="js/world.js?v=6"></script>
 <script src="js/boss.js?v=5"></script>
 <script src="js/draw.js?v=8"></script>
